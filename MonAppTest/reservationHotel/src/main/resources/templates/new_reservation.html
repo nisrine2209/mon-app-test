@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Réservation</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {
+                background: linear-gradient(to right, #eef2f3, #8e9eab);
+                font-family: Arial, sans-serif;
+            }
+
+            .container {
+                max-width: 600px;
+                background-color: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+
+            h1 {
+                color: #2c3e50;
+                font-weight: 700;
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 2.5rem;
+            }
+
+            .form-label {
+                font-weight: bold;
+                color: #34495e;
+            }
+
+            .form-control, .form-select {
+                border: 1px solid #ced4da;
+                border-radius: 5px;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            button.btn {
+                font-size: 1.2rem;
+                box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            button.btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            a.btn {
+                font-size: 1.2rem;
+                text-align: center;
+                display: block;
+                margin-top: 20px;
+                box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            a.btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .btn-primary {
+                background-color: #3498db;
+                border-color: #3498db;
+            }
+
+            .btn-success {
+                background-color: #2ecc71;
+                border-color: #2ecc71;
+            }
+
+            .alert {
+                font-weight: bold;
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <h1>Faire une Réservation</h1>
+
+            <form action="/reservations/saveNewReservation" method="POST">
+
+                <div class="mb-3">
+                    <label for="client" class="form-label">Client :</label>
+                    <select name="client" id="client" class="form-select" required>
+                        <option value="">Sélectionner un client</option>
+                        <option th:each="client : ${clients}" 
+                                th:value="${client.id}" 
+                                th:text="${client.nom + ' ' + client.prenom}"></option>
+                    </select>
+                </div>
+
+                <!-- Sélection de la chambre -->
+                <div class="mb-3">
+                    <label for="chambre" class="form-label">Chambre :</label>
+                    <select name="chambreId" id="chambre" class="form-select" required>
+                        <option value="">Sélectionner une chambre</option>
+                        <option th:each="chambre : ${chambres}" 
+                                th:value="${chambre.id}"
+                                th:text="${chambre.numeroChambre + ' - ' + chambre.typeChambre + ' - ' + chambre.tarifParNuit + ' €/nuit'}"></option>
+                    </select>
+                </div>
+
+                <!-- Date de début -->
+                <div class="mb-3">
+                    <label for="dateDebut" class="form-label">Date de début :</label>
+                    <input type="date" id="dateDebut" name="dateDebut" class="form-control" required 
+                           th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="dateFin" class="form-label">Date de fin :</label>
+                    <input type="date" id="dateFin" name="dateFin" class="form-control" required 
+                           th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                </div>
+
+
+                <div th:if="${error}" class="alert alert-danger">
+                    <p th:text="${error}"></p>
+                </div>
+
+
+                <button type="submit" class="btn btn-success btn-lg w-100 mt-3">Réserver</button>
+                <a href="/" class="btn btn-primary btn-lg w-100 mt-3">Retour à la page d'accueil</a>
+            </form>
+        </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
